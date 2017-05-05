@@ -13,6 +13,7 @@ public class CompClientUI extends Thread implements ActionListener {
 	
 	JFrame uiFrame;
 	JLabel explanation;
+	JLabel autoInfoBox;
 	JButton buttonRight;
 	JButton buttonLeft;
 	JButton buttonStop;
@@ -32,6 +33,7 @@ public class CompClientUI extends Thread implements ActionListener {
 		
 		
 		explanation = new JLabel("Text here");
+		autoInfoBox = new JLabel("Auto is OFF");
 		buttonRight = new JButton(">");
 		buttonRight.addActionListener(this);
 		buttonLeft = new JButton("<");
@@ -57,6 +59,9 @@ public class CompClientUI extends Thread implements ActionListener {
 		constra = changeConstraints(constra, 0,1,2);
 		uiFrame.add(buttonAuto, constra);
 		
+		constra = changeConstraints(constra, 0,1,3);
+		uiFrame.add(autoInfoBox, constra);
+		
 		uiFrame.setSize(SIZEX, SIZEY);
 		uiFrame.setVisible(true);
 	}
@@ -76,15 +81,17 @@ public class CompClientUI extends Thread implements ActionListener {
 		if (event.getSource() == buttonAuto){
 			if (autoBool){
 				autoBool = false;
+				autoInfoBox.setText("Auto is OFF");
 			} else {
 				autoBool = true;
+				autoInfoBox.setText("Auto is ON");
 			}
 		}
 		if (!autoBool){
 			if (event.getSource() == buttonRight){
-				bluetooth.changeTurnFloat(-1.0f);
-			} else if (event.getSource() == buttonLeft){
 				bluetooth.changeTurnFloat(1.0f);
+			} else if (event.getSource() == buttonLeft){
+				bluetooth.changeTurnFloat(-1.0f);
 			} else if (event.getSource() == buttonStop){
 				bluetooth.changeTurnFloat(0f);
 			}

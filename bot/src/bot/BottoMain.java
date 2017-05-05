@@ -5,7 +5,6 @@ import lejos.robotics.RegulatedMotor;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3TouchSensor;
 
-
 public class BottoMain {
 	
     public static void main(String[] args) {

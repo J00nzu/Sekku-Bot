@@ -1,10 +1,12 @@
 package bot;
+import lejos.hardware.lcd.LCD;
 import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.robotics.RegulatedMotor;
 
 public class BottoMotor extends Thread {
 	private static final int SPEED = 50;
 	private float turnFloat = 0;
+	private float savedTurnFloat = 0;
 	
 	private boolean endBool = false;
 	RegulatedMotor motor;
@@ -24,19 +26,21 @@ public class BottoMotor extends Thread {
 	
 	public void run(){
 		while (!endBool){
-			if (turnFloat !=0){
-				touchSen1.fetchSample(sample1, 0);
-				touchSen2.fetchSample(sample2, 0);
-				if((turnFloat < 0) && (sample1[0] == 0)){
+			touchSen1.fetchSample(sample1, 0);
+			touchSen2.fetchSample(sample2, 0);
+			LCD.drawString(sample1[0]+" "+sample2[0], 0, 4);
+			if (turnFloat != savedTurnFloat){
+				savedTurnFloat = turnFloat;
+				if((turnFloat > 0) && (sample1[0] == 0)){
 					motor.setSpeed((int) (turnFloat*(-1)*SPEED));
-					motor.backward();
-				} else if ((turnFloat > 0) && (sample2[0] == 0)){
-					motor.setSpeed((int) (turnFloat*SPEED));
 					motor.forward();
-				} else {
+				} else if ((turnFloat < 0) && (sample2[0] == 0)){
+					motor.setSpeed((int) (turnFloat*SPEED));
+					motor.backward();
+				} else { //if turnFloat = 0 || either of sensors is down
 					motor.stop();
 				}
-			} else{
+			} else if (((turnFloat > 0) && (sample1[0] == 1)) || ((turnFloat < 0) && (sample2[0] == 1))){
 				motor.stop();
 			}
 		}
