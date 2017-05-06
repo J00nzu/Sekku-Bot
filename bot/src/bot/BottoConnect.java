@@ -14,9 +14,11 @@ public class BottoConnect extends Thread { //brick part
 	Socket socket;
 	DataInputStream stream;
 	BottoMotor motorcon;
+	BottoSound soundcon;
 	
-	public BottoConnect(BottoMotor motor){
+	public BottoConnect(BottoMotor motor, BottoSound sound){
 		this.motorcon = motor;
+		this.soundcon = sound;
 	}
 	
 	public void run(){
@@ -34,7 +36,11 @@ public class BottoConnect extends Thread { //brick part
 		while(true){
 			try {
 				float nextInt = stream.readFloat();
+				int nextSound = stream.readInt();
 				motorcon.changeFloat(nextInt);
+				if (nextSound != 0){
+					soundcon.changeIncCommand(nextSound);
+				}
 			} catch (IOException e) {
 				motorcon.endThread();
 				break;

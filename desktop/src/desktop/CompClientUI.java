@@ -82,9 +82,11 @@ public class CompClientUI extends Thread implements ActionListener {
 			if (autoBool){
 				autoBool = false;
 				autoInfoBox.setText("Auto is OFF");
+				bluetooth.changeTurnFloat(0);
 			} else {
 				autoBool = true;
 				autoInfoBox.setText("Auto is ON");
+				bluetooth.changeSoundInt(2);
 			}
 		}
 		if (!autoBool){
