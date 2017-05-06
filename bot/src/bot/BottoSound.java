@@ -17,6 +17,7 @@ public class BottoSound extends Thread{
 	public void targetFoundSound(){
 		//max = funktion käytössä olevien äänifilujen määrä 
 		int max=6;
+		//generoi luvun 1 ja max välillä
 		int choice = 1 + (int)(Math.random() * ((max - 1) + 1));
 		switch(choice){
 			case 1: sound = new File ("can_i_help_you.aiff");
@@ -35,6 +36,7 @@ public class BottoSound extends Thread{
 		shouldPlay=true;	
 	}
 	
+	//löytö
 	public void targetLostSound(){
 		int max=2;
 		int choice = 1 + (int)(Math.random() * ((max - 1) + 1));
@@ -46,6 +48,8 @@ public class BottoSound extends Thread{
 		}
 		shouldPlay=true;
 	}
+	
+	//error
 	public void errorSound(){
 		int max=2;
 		int choice = 1 + (int)(Math.random() * ((max - 1) + 1));
@@ -53,6 +57,21 @@ public class BottoSound extends Thread{
 			case 1: sound = new File ("malfunctioning.aiff");
 					break;
 			case 2: sound = new File ("unknown_error.aiff");
+					break;
+		}
+		shouldPlay=true;
+	}
+	
+	//automode
+	public void autoModeActivationSound(){
+		int max=3;
+		int choice = 1 + (int)(Math.random() * ((max - 1) + 1));
+		switch(choice){
+			case 1: sound = new File ("activated.aiff");
+					break;
+			case 2: sound = new File ("searching.aiff");
+					break;
+			case 3: sound = new File ("senntry_mode_activated.aiff");
 					break;
 		}
 		shouldPlay=true;
