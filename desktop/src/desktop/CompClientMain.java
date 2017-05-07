@@ -13,12 +13,11 @@ import boofcv.gui.image.ShowImages;
 public class CompClientMain {
 
 	public static void main(String[] args) {
-		//initialization of Algorithm thread here, and give it to UI thread
-		//Algorithm someName = new Algorithm();
+		CompCameraProvider prov = new CompCameraProvider("devicename", 640,480);
 		CompClientBlu blu = new CompClientBlu();
-		CompClientUI ui = new CompClientUI(blu);
+		CompVisionAlgo algo = new CompVisionAlgo(prov, 500);
+		CompClientUI ui = new CompClientUI(blu, algo);
 		ui.start();
-		
 		
 		/*
 		List<String> webcams = CompCameraProvider.getAvailableWebcams();
@@ -52,8 +51,7 @@ public class CompClientMain {
 			System.out.println(vision.getTurnVector());
 		}
 		camera.close();
-		
-		 */
+		*/
 	}
 
 }
