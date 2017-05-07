@@ -19,9 +19,11 @@ public class CompClientUI extends Thread implements ActionListener {
 	JButton buttonStop;
 	JButton buttonAuto;
 	CompClientBlu bluetooth;
+	CompVisionAlgo algorithm;
 	
-	public CompClientUI(CompClientBlu blub){
+	public CompClientUI(CompClientBlu blub, CompVisionAlgo algo){
 		this.bluetooth = blub;
+		this.algorithm = algo;
 	}
 	
 	public void run(){
@@ -64,6 +66,12 @@ public class CompClientUI extends Thread implements ActionListener {
 		
 		uiFrame.setSize(SIZEX, SIZEY);
 		uiFrame.setVisible(true);
+		
+		while(true){
+			if (autoBool){
+				bluetooth.changeTurnFloat(algorithm.getTurnVector());
+			}
+		}
 	}
 	
 	private GridBagConstraints changeConstraints(GridBagConstraints con, double weight, int x, int y){
