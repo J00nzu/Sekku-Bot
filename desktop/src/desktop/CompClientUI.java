@@ -28,6 +28,7 @@ public class CompClientUI extends Thread implements ActionListener {
 	
 	public void run(){
 		bluetooth.start();
+		algorithm.start();
 		uiFrame = new JFrame("Controller UI");
 		GridBagConstraints constra = new GridBagConstraints();
 		uiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
