@@ -31,6 +31,7 @@ public class CompVisionAlgo extends Thread {
 	private int maxFeatures;
 	private BufferedImage visualized;
 	private boolean shouldStop = false;
+	private boolean autoStarted = false;
 	
 	private static float turn_treshold = 0.2f;
 	
@@ -361,10 +362,11 @@ public class CompVisionAlgo extends Thread {
 	
 	
 	private void aliveCheck(){
-		if(!this.isAlive() && !shouldStop){
+		if(!this.isAlive() && !shouldStop && !autoStarted){
 			try{
 				setDaemon(true);
 				start();
+				autoStarted = true;
 			}catch(IllegalThreadStateException ex){}
 		}else if(shouldStop){
 			throw new RuntimeException("I'm already dead. - Hanzo main 2017");
