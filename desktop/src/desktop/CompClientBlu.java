@@ -12,6 +12,8 @@ public class CompClientBlu extends Thread {
 	DataOutputStream dos;
 	
 	private float turnFloat = 0;
+	private int soundInt = 0; 
+	// 0=noSound, 1=error, 2=autoOn, 3=targetFound, 4=targetLost
 	
 	public void run() {;
 		try {
@@ -19,8 +21,12 @@ public class CompClientBlu extends Thread {
 			dos = new DataOutputStream(socket.getOutputStream());
 			while (true){
 				dos.writeFloat(turnFloat);
+				dos.writeInt(soundInt);
 				dos.flush();
-				System.out.println("Sent: "+turnFloat);
+				System.out.println("Sent: "+turnFloat+" + "+soundInt);
+				if (soundInt != 0){
+					soundInt = 0;
+				}
 				Thread.sleep(100);
 				if (turnFloat == 9001){
 					break;
@@ -40,6 +46,10 @@ public class CompClientBlu extends Thread {
 	
 	public void changeTurnFloat(float flo){
 		this.turnFloat = flo;
+	}
+	
+	public void changeSoundInt(int ind){
+		this.soundInt = ind;
 	}
 
 }
