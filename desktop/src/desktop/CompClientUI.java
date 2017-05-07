@@ -1,15 +1,18 @@
 package desktop;
 import javax.swing.*;
+import boofcv.gui.image.ImagePanel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class CompClientUI extends Thread implements ActionListener {
-	private static final int SIZEX = 300;
-	private static final int SIZEY = 300;
+	private static final int SIZEX = 1080;
+	private static final int SIZEY = 720;
 	
 	boolean autoBool = false;
+	boolean CompuVision = false;
 	
 	JFrame uiFrame;
 	JLabel explanation;
@@ -18,16 +21,21 @@ public class CompClientUI extends Thread implements ActionListener {
 	JButton buttonLeft;
 	JButton buttonStop;
 	JButton buttonAuto;
+	JButton buttonChange;
 	CompClientBlu bluetooth;
 	CompVisionAlgo algorithm;
+	CompCameraProvider camera;
+	ImagePanel imgPanel;
 	
-	public CompClientUI(CompClientBlu blub, CompVisionAlgo algo){
+	public CompClientUI(CompClientBlu blub, CompVisionAlgo algo, CompCameraProvider camera){
 		this.bluetooth = blub;
 		this.algorithm = algo;
+		this.camera = camera;
 	}
 	
 	public void run(){
 		bluetooth.start();
+		camera.open();
 		algorithm.start();
 		uiFrame = new JFrame("Controller UI");
 		GridBagConstraints constra = new GridBagConstraints();
@@ -45,6 +53,11 @@ public class CompClientUI extends Thread implements ActionListener {
 		buttonStop.addActionListener(this);
 		buttonAuto = new JButton("Auto");
 		buttonAuto.addActionListener(this);
+		imgPanel = new ImagePanel();
+		buttonChange = new JButton("CompuVision 2000TM");
+		buttonChange.addActionListener(this);
+		
+		imgPanel.setPreferredSize(camera.getWebcam().getViewSize());
 		
 		//add label
 		constra = changeConstraints(constra, 0,1,0);
@@ -63,7 +76,13 @@ public class CompClientUI extends Thread implements ActionListener {
 		uiFrame.add(buttonAuto, constra);
 		
 		constra = changeConstraints(constra, 0,1,3);
+		uiFrame.add(buttonChange, constra);
+		
+		constra = changeConstraints(constra, 0,1,4);
 		uiFrame.add(autoInfoBox, constra);
+		
+		constra = changeConstraints(constra, 0,1,5);
+		uiFrame.add(imgPanel, constra);
 		
 		uiFrame.setSize(SIZEX, SIZEY);
 		uiFrame.setVisible(true);
@@ -72,11 +91,16 @@ public class CompClientUI extends Thread implements ActionListener {
 			if (autoBool){
 				bluetooth.changeTurnFloat(algorithm.getTurnVector());
 			}
+			if (CompuVision) {
+				imgPanel.setBufferedImageSafe(algorithm.GetVisualizedImage());
+			}else{
+			imgPanel.setBufferedImageSafe(camera.getFrame());
+			}
 		}
 	}
 	
 	private GridBagConstraints changeConstraints(GridBagConstraints con, double weight, int x, int y){
-		con.fill = GridBagConstraints.HORIZONTAL;
+		con.fill = GridBagConstraints.RELATIVE;
 		con.weightx = weight;
 		con.gridx = x;
 		con.gridy = y;
@@ -105,6 +129,13 @@ public class CompClientUI extends Thread implements ActionListener {
 				bluetooth.changeTurnFloat(-1.0f);
 			} else if (event.getSource() == buttonStop){
 				bluetooth.changeTurnFloat(0f);
+			}
+			if (event.getSource() == buttonChange){
+				if (CompuVision){
+				CompuVision = false;
+				}else{
+					CompuVision = true;
+				}
 			}
 		}
 	}

@@ -39,6 +39,7 @@ public class CompVisionAlgo extends Thread {
 
 	public CompVisionAlgo(CompCameraProvider camera, int maxFeatures) {
 		this.cam = camera;
+		this.maxFeatures = maxFeatures;
 	}
 	
 

@@ -13,10 +13,11 @@ import boofcv.gui.image.ShowImages;
 public class CompClientMain {
 
 	public static void main(String[] args) {
-		CompCameraProvider prov = new CompCameraProvider("devicename", 640,480);
+		String eiKissaa = CompCameraProvider.getDefaultWebcam();
+		CompCameraProvider prov = new CompCameraProvider(eiKissaa, 640,480);
 		CompClientBlu blu = new CompClientBlu();
-		CompVisionAlgo algo = new CompVisionAlgo(prov, 500);
-		CompClientUI ui = new CompClientUI(blu, algo);
+		CompVisionAlgo algo = new CompVisionAlgo(prov, 200);
+		CompClientUI ui = new CompClientUI(blu, algo, prov);
 		ui.start();
 		
 		/*
