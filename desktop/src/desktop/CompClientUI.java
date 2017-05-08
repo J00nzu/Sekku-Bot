@@ -1,10 +1,12 @@
 package desktop;
 import javax.swing.*;
+
 import boofcv.gui.image.ImagePanel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 //starts all other threads, initializes and handles UI and transfers information to bluetooth thread
 //begins on run()
@@ -42,6 +44,7 @@ public class CompClientUI extends Thread implements ActionListener {
 		// starting threads
 		bluetooth.start();
 		camera.open();
+		algorithm.setPriority(MAX_PRIORITY);
 		algorithm.start();
 		
 		// initializing ui base
@@ -112,6 +115,23 @@ public class CompClientUI extends Thread implements ActionListener {
 			}else{ // see what camera sees
 				imgPanel.setBufferedImageSafe(camera.getFrame());
 			}
+			
+			
+			Runtime runtime = Runtime.getRuntime();
+
+			NumberFormat format = NumberFormat.getInstance();
+
+			StringBuilder sb = new StringBuilder();
+			long maxMemory = runtime.maxMemory();
+			long allocatedMemory = runtime.totalMemory();
+			long freeMemory = runtime.freeMemory();
+
+			sb.append("free memory: " + format.format(freeMemory / 1024) + "\n");
+			sb.append("allocated memory: " + format.format(allocatedMemory / 1024) + "\n");
+			sb.append("max memory: " + format.format(maxMemory / 1024) + "\n");
+			sb.append("total free memory: " + format.format((freeMemory + (maxMemory - allocatedMemory)) / 1024) + "\n");
+			
+			System.out.println(sb.toString());
 		}
 	}
 	
@@ -148,12 +168,13 @@ public class CompClientUI extends Thread implements ActionListener {
 			} else if (event.getSource() == buttonStop){
 				bluetooth.changeTurnFloat(0f);
 			}
-			if (event.getSource() == buttonChange){
-				if (CompuVision){
-					CompuVision = false;
-				}else{
-					CompuVision = true;
-				}
+		}
+		
+		if (event.getSource() == buttonChange){
+			if (CompuVision){
+				CompuVision = false;
+			}else{
+				CompuVision = true;
 			}
 		}
 	}

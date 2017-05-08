@@ -25,6 +25,8 @@ public class CompClientBlu extends Thread {
 				dos = new DataOutputStream(socket.getOutputStream());
 				// sends known and received data at rate of 10/second
 				while (true){
+					System.out.println("Turn= "+turnFloat);
+					System.out.println("Sound= "+soundInt);
 					dos.writeFloat(turnFloat);
 					dos.writeInt(soundInt);
 					dos.flush(); // actually sends the data packet
@@ -39,12 +41,11 @@ public class CompClientBlu extends Thread {
 				}
 				dos.close();
 				socket.close();
-			} catch (UnknownHostException e) {
-				System.out.println("Connection not found, retrying...");
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			} catch (Exception ex) {
+				System.out.println("Connection failed, retrying...");
+				try{
+					Thread.sleep(1000);
+				}catch(Exception ex1){}
 			}
 		}
 	}

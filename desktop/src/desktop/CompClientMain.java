@@ -34,7 +34,7 @@ public class CompClientMain {
 		//  webcam selection end
 		CompCameraProvider prov = new CompCameraProvider(selected, 640,480); // initializes webcam handler with chosen name
 		CompClientBlu blu = new CompClientBlu(); // initializes new bluetooth thread
-		CompVisionAlgo algo = new CompVisionAlgo(prov, 200); // initializes new camera algorithm thread
+		CompVisionAlgo algo = new CompVisionAlgo(prov, 400); // initializes new camera algorithm thread
 		CompClientUI ui = new CompClientUI(blu, algo, prov); // initializes new UI thread with all of the above
 		ui.start(); // starts UI thread
 		
