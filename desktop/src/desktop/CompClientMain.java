@@ -10,6 +10,12 @@ import javax.swing.JOptionPane;
 import boofcv.gui.image.ImagePanel;
 import boofcv.gui.image.ShowImages;
 
+/** 
+ * Initializes all threads run in desktop side and sets program in motion
+ * The brick side server-like program must be started before this desktop side program will work
+ * @author Elda (Sakari)
+ *
+ */
 // initializes all threads run in desktop side and sets program in motion
 // the brick side server-like program must be started before this desktop side program will work
 public class CompClientMain {

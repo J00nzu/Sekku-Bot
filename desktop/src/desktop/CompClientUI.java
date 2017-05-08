@@ -8,8 +8,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
-//starts all other threads, initializes and handles UI and transfers information to bluetooth thread
-//begins on run()
+
+/**
+ * Starts all other desktop threads
+ * Initializes and handles User Interface
+ * Transfers information to bluetooth thread
+ * @author Elda (Sakari)
+ *
+ */
 public class CompClientUI extends Thread implements ActionListener {
 	private static final int SIZEX = 1080;
 	private static final int SIZEY = 720;
@@ -32,14 +38,24 @@ public class CompClientUI extends Thread implements ActionListener {
 	CompVisionAlgo algorithm;	// stored camera algorithm (gets automatic movement from here)
 	CompCameraProvider camera;	// stored camera handler (gets videofeed here from here)
 	
-	// constructor
+	/**
+	 * Takes other threads and stores them.
+	 * @param blub Initialized Desktop bluetooth thread.
+	 * @param algo Initialized Desktop camera follow algorithm thread.
+	 * @param camera Initialized Camera Handler class.
+	 */
 	public CompClientUI(CompClientBlu blub, CompVisionAlgo algo, CompCameraProvider camera){
 		this.bluetooth = blub;
 		this.algorithm = algo;
 		this.camera = camera;
 	}
 	
-	
+	/**
+	 * Start of the thread.
+	 * Starts other threads, initializes UI 
+	 * Continues to read videofeed
+	 * Continues to transmit data to bluetooth
+	 */
 	public void run(){
 		// starting threads
 		bluetooth.start();
@@ -116,7 +132,7 @@ public class CompClientUI extends Thread implements ActionListener {
 				imgPanel.setBufferedImageSafe(camera.getFrame());
 			}
 			
-			
+			// testing for memory leaks
 			Runtime runtime = Runtime.getRuntime();
 
 			NumberFormat format = NumberFormat.getInstance();
@@ -135,7 +151,14 @@ public class CompClientUI extends Thread implements ActionListener {
 		}
 	}
 	
-	// method for quickly setting GridBagConstraints for UI elements
+	/**
+	 * Method for quickly setting GridBagConstraints for UI elements
+	 * @param con Storage spot.
+	 * @param weight How much extra space this element gets.
+	 * @param x Column number.
+	 * @param y Row number.
+	 * @return
+	 */
 	private GridBagConstraints changeConstraints(GridBagConstraints con, double weight, int x, int y){
 		con.fill = GridBagConstraints.RELATIVE;
 		con.weightx = weight;
@@ -145,7 +168,11 @@ public class CompClientUI extends Thread implements ActionListener {
 		
 	}
 	
-	// listens to UI buttons and acts accordingly
+	/**
+	 * Action listener for this thread.
+	 * (Don't call this function)
+	 * Listens to UI buttons and acts accordingly
+	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		System.out.println("A button was pressed...");
