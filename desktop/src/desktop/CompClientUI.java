@@ -53,7 +53,7 @@ public class CompClientUI extends Thread implements ActionListener {
 	/**
 	 * Start of the thread.
 	 * Starts other threads, initializes UI 
-	 * Continues to read videofeed
+	 * Continues to read video feed
 	 * Continues to transmit data to bluetooth
 	 */
 	public void run(){

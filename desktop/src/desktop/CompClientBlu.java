@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
  * 
  * Transfers received data over bluetooth to set HOST
  * Acts as a bridge between desktop and brick.
- * During runtime recives updates with changeTurnFloat() and changeSoundInt().
+ * During runtime receives updates with changeTurnFloat() and changeSoundInt().
  * 
  * @author Elda (Sakari)
  *
