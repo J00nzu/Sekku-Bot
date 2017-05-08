@@ -52,7 +52,7 @@ public class CompCameraProvider {
 	 *            desired height in pixels
 	 * 
 	 */
-	public CompCameraProvider(String deviceName, int sourceWidth,
+	public CompCameraProvider(String deviceName, int sourceWidth, 
 			int sourceHeight) {
 		this.camName = deviceName;
 		this.sWidth = sourceWidth;
