@@ -47,7 +47,7 @@ public class CompClientUI extends Thread implements ActionListener {
 		// initializing ui base
 		uiFrame = new JFrame("Controller UI");
 		GridBagConstraints constra = new GridBagConstraints();
-		uiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		uiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // this is used to close all other threads also
 		uiFrame.setLayout(new GridBagLayout()); // using GridBagLayout
 		
 		// initializing UI parts
