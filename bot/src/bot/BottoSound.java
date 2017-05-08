@@ -99,7 +99,7 @@ public class BottoSound extends Thread {
 			sound = new File("searching.aiff");
 			break;
 		case 3:
-			sound = new File("sentry_mode_activated.aiff");
+			sound = new File("senntry_mode_activated.aiff");
 			break;
 		}
 		shouldPlay = true;
@@ -137,16 +137,19 @@ public class BottoSound extends Thread {
 		}
 	}
 	
+	// received command on what kind of sound to randomize
 	public void changeIncCommand(int iCommand){
 		this.incCommand = iCommand;
 	}
 	
+	// randomizes one filename from list and sets it to to sound
 	public void newSound(String[] fileNameList){
 		int rand = trueR.nextInt(fileNameList.length);
 		sound = new File(fileNameList[rand]);
 		shouldPlay = true;
 	}
 	
+	// remote thread ending
 	public void endThread(){
 		endBool = true;
 	}
