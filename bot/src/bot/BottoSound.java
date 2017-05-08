@@ -7,12 +7,10 @@ import lejos.hardware.Sound;
 import lejos.utility.Delay;
 
 public class BottoSound extends Thread {
-	// löytö
-	// kohteen menetys
-	// sensoriäänet?
-	// fnktioita ohjauskomennoille? (oikea vasen stop)
+	
 	private File sound = null;
 	private boolean shouldPlay = false;
+	private boolean endBool = false;
 	
 	//Elda variables
 	private int incCommand = 0;
@@ -108,7 +106,7 @@ public class BottoSound extends Thread {
 	}
 
 	public void run() {
-		while (true) {
+		while (!endBool) {
 			if (incCommand != 0){
 				switch(incCommand){
 				case 1:
@@ -147,5 +145,9 @@ public class BottoSound extends Thread {
 		int rand = trueR.nextInt(fileNameList.length);
 		sound = new File(fileNameList[rand]);
 		shouldPlay = true;
+	}
+	
+	public void endThread(){
+		endBool = true;
 	}
 }
