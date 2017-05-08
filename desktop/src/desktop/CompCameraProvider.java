@@ -32,15 +32,15 @@ public class CompCameraProvider {
 	private Object frameMonitor = new Object();
 
 	/**
-	 * --Example--
+	 * Constructs a CompCameraProvider with the desired parameters <br><br>
+	 * --Example of use--
 	 * 
 	 * <pre>
-	 * {
-	 * 	&#064;code
+	 * 
 	 * 	String camName = CompCameraProvider.getDefaultWebcam();
 	 * 	CompCameraProvider camera = new CompCameraProvider(camName, 640, 480);
 	 * 	camera.open();
-	 * }
+	 * 
 	 * </pre>
 	 * 
 	 * @author J00nzu
@@ -59,6 +59,9 @@ public class CompCameraProvider {
 		this.sHeight = sourceHeight;
 	}
 
+	/**
+	 * Opens the webcam with the desired device name
+	 */
 	public void open() {
 		if (webcam == null) {
 			webcam = UtilWebcamCapture.openDevice(camName, sWidth, sHeight);
@@ -66,6 +69,9 @@ public class CompCameraProvider {
 		}
 	}
 
+	/**
+	 * Closes the webcam
+	 */
 	public void close() {
 		if (webcam != null) {
 			webcam.close();
@@ -74,7 +80,7 @@ public class CompCameraProvider {
 
 	/**
 	 * Gets all the available webcams on this system
-	 * @return returns a list of strings with the webcam names
+	 * @return A list of strings with the webcam names
 	 */
 	public static List<String> getAvailableWebcams() {
 		List<Webcam> webcams = Webcam.getWebcams();
@@ -88,6 +94,10 @@ public class CompCameraProvider {
 		return strings;
 	}
 
+	/**
+	 * Gets the default webcam on the system
+	 * @return A String of the webcam name
+	 */
 	public static String getDefaultWebcam() {
 		String camN = "";
 		Webcam cam = Webcam.getDefault();
@@ -99,6 +109,11 @@ public class CompCameraProvider {
 		return camN;
 	}
 
+	/**
+	 * Gets the next frame from the camera.<br>
+	 * If another thread is already polling for a frame, this will wait until the frame is available.
+	 * @return A BufferedImage of the next frame
+	 */
 	public synchronized BufferedImage getFrame() {
 		if (webcam != null) {
 			if(frameLock.tryAcquire()){
@@ -124,6 +139,10 @@ public class CompCameraProvider {
 		}
 	}
 
+	/**
+	 * If last captured frame is reasonably fresh,<br> will return the last captured frame without waiting for a new one.
+	 * @return The last frame from the camera
+	 */
 	public BufferedImage getLastFrame() {
 		if (webcam != null) {
 			if(lastFrame==null){
@@ -138,14 +157,26 @@ public class CompCameraProvider {
 		}
 	}
 	
+	/**
+	 * Gets the width of this camera
+	 * @return The width of the camera
+	 */
 	public int getWidth(){
 		return sWidth;
 	}
 	
+	/**
+	 * Gets the height of this camera
+	 * @return The height of the camera
+	 */
 	public int getHeight(){
 		return sHeight;
 	}
 	
+	/**
+	 * Gets the actual Webcam object of this CameraProvider
+	 * @return The Webcam or null if not yet opened
+	 */
 	public Webcam getWebcam(){
 		return webcam;
 	}
