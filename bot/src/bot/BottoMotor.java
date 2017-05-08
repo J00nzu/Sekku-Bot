@@ -3,12 +3,15 @@ import lejos.hardware.lcd.LCD;
 import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.robotics.RegulatedMotor;
 
+// receives control instructions and controls accordingly
+// reads touch sensors and prevents turning to that direction when limit has been reached
 public class BottoMotor extends Thread {
 	private static final int SPEED = 50;
 	private float turnFloat = 0;
 	private float savedTurnFloat = 0;
-	
 	private boolean endBool = false;
+	
+	// saved device parameters
 	RegulatedMotor motor;
 	EV3TouchSensor touchSen1;
 	EV3TouchSensor touchSen2;
@@ -44,15 +47,18 @@ public class BottoMotor extends Thread {
 				motor.stop();
 			}
 		}
+		// closing sequence, closes connected devices
 		motor.close();
 		touchSen1.close();
 		touchSen2.close();
 	}
 	
+	// receives new instructions to turn
 	public void changeFloat(float flo){
 		this.turnFloat = flo;
 	}
 	
+	// receives instructions to end the thread
 	public void endThread(){
 		endBool = true;
 	}
