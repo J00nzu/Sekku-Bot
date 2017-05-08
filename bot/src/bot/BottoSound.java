@@ -139,11 +139,10 @@ public class BottoSound extends Thread {
 		}
 	}
 	
-	public void changeIncCommand(int i){
-		this.incCommand = i;
+	public void changeIncCommand(int iCommand){
+		this.incCommand = iCommand;
 	}
 	
-	//example of better method
 	public void newSound(String[] fileNameList){
 		int rand = trueR.nextInt(fileNameList.length);
 		sound = new File(fileNameList[rand]);

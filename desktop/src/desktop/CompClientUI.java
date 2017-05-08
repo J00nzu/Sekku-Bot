@@ -11,10 +11,12 @@ public class CompClientUI extends Thread implements ActionListener {
 	private static final int SIZEX = 1080;
 	private static final int SIZEY = 720;
 	
-	boolean autoBool = false;
-	boolean CompuVision = false;
+	boolean autoBool = false; // toggle between automatic algorithm and manual control
+	boolean CompuVision = false; // toggle between computer vision and actual camera
+	boolean algoWasFollowing = false; // remembers what state the algorithm.isFollowing() had.
 	
 	JFrame uiFrame;
+	ImagePanel imgPanel;
 	JLabel explanation;
 	JLabel autoInfoBox;
 	JButton buttonRight;
@@ -25,7 +27,6 @@ public class CompClientUI extends Thread implements ActionListener {
 	CompClientBlu bluetooth;
 	CompVisionAlgo algorithm;
 	CompCameraProvider camera;
-	ImagePanel imgPanel;
 	
 	public CompClientUI(CompClientBlu blub, CompVisionAlgo algo, CompCameraProvider camera){
 		this.bluetooth = blub;
@@ -43,7 +44,7 @@ public class CompClientUI extends Thread implements ActionListener {
 		uiFrame.setLayout(new GridBagLayout());
 		
 		
-		explanation = new JLabel("Text here");
+		explanation = new JLabel("SEKU-BOTTO");
 		autoInfoBox = new JLabel("Auto is OFF");
 		buttonRight = new JButton(">");
 		buttonRight.addActionListener(this);
@@ -63,38 +64,46 @@ public class CompClientUI extends Thread implements ActionListener {
 		constra = changeConstraints(constra, 0,1,0);
 		uiFrame.add(explanation, constra);
 		
-		constra = changeConstraints(constra, 0.5,0,1);
+		constra = changeConstraints(constra, 1,1,1);
+		uiFrame.add(imgPanel, constra);
+		
+		constra = changeConstraints(constra, 0.5,0,2);
 		uiFrame.add(buttonLeft, constra);
 		
-		constra = changeConstraints(constra, 0.5,1,1);
+		constra = changeConstraints(constra, 0.5,1,2);
 		uiFrame.add(buttonStop, constra);
 		
-		constra = changeConstraints(constra, 0.5,2,1);
+		constra = changeConstraints(constra, 0.5,2,2);
 		uiFrame.add(buttonRight, constra);
 		
-		constra = changeConstraints(constra, 0,1,2);
-		uiFrame.add(buttonAuto, constra);
-		
-		constra = changeConstraints(constra, 0,1,3);
-		uiFrame.add(buttonChange, constra);
-		
-		constra = changeConstraints(constra, 0,1,4);
+		constra = changeConstraints(constra, 0,0,3);
 		uiFrame.add(autoInfoBox, constra);
 		
-		constra = changeConstraints(constra, 0,1,5);
-		uiFrame.add(imgPanel, constra);
+		constra = changeConstraints(constra, 0,1,3);
+		uiFrame.add(buttonAuto, constra);
+		
+		constra = changeConstraints(constra, 0,2,3);
+		uiFrame.add(buttonChange, constra);
+
 		
 		uiFrame.setSize(SIZEX, SIZEY);
 		uiFrame.setVisible(true);
 		
 		while(true){
 			if (autoBool){
-				bluetooth.changeTurnFloat(algorithm.getTurnVector());
+				bluetooth.changeTurnFloat(algorithm.getTurnVector()); //algorithm chooses
+				if (algorithm.isFollowing() && !algoWasFollowing){
+					algoWasFollowing = true;
+					bluetooth.changeSoundInt(3);
+				} else if (!algorithm.isFollowing() && algoWasFollowing) {
+					algoWasFollowing = false;
+					bluetooth.changeSoundInt(4);
+				}
 			}
 			if (CompuVision) {
 				imgPanel.setBufferedImageSafe(algorithm.getVisualizedImage());
 			}else{
-			imgPanel.setBufferedImageSafe(camera.getFrame());
+				imgPanel.setBufferedImageSafe(camera.getFrame());
 			}
 		}
 	}
@@ -132,7 +141,7 @@ public class CompClientUI extends Thread implements ActionListener {
 			}
 			if (event.getSource() == buttonChange){
 				if (CompuVision){
-				CompuVision = false;
+					CompuVision = false;
 				}else{
 					CompuVision = true;
 				}
