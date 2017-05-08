@@ -118,19 +118,23 @@ public class CompVisionAlgo extends Thread {
 	 */
 	public void run() {
 		
+		//Configuration for the point detector
 		ConfigGeneralDetector configDetector = new ConfigGeneralDetector(
 				maxFeatures, 12, 1);
 		PkltConfig configKlt = new PkltConfig(4, new int[] { 1, 2, 4, 8 });
 
+		//PointTracker initialization
 		PointTracker<GrayF32> tracker = FactoryPointTracker.klt(configKlt,
 				configDetector, GrayF32.class, null);
 
 		HashMap<Long, PointData> pointLife = new HashMap<Long, PointData>();
 		ArrayList<PointGroup> pointGroups = new ArrayList<PointGroup>();
 
+		// pointUpdateTreshold is how often in milliseconds will the algorithm search for new points
 		long lastPointUpdate = System.currentTimeMillis();
 		long pointUpdateTreshold = 500;
 
+		//initial number for the minimum tracks
 		int minimumTracks = 100;
 
 		// How many levels in wavelet transform
@@ -139,6 +143,7 @@ public class CompVisionAlgo extends Thread {
 		WaveletDenoiseFilter<GrayF32> denoiser = FactoryImageDenoise
 				.waveletBayes(GrayF32.class, numLevels, 0, 255);
 
+		//Trackpoint x and y
 		double trackX = cam.getWidth() / 2;
 		double trackY = cam.getHeight() / 2;
 		double targetTrackX = 0;
@@ -147,21 +152,22 @@ public class CompVisionAlgo extends Thread {
 		while (!shouldStop) {
 			try {
 
-				BufferedImage image = cam.getLastFrame();
+				BufferedImage image = cam.getLastFrame(); //capture an image from the camera
 				if (image == null) {
 					turnVector = 0;
 					break;
 				}
 
+				// Convert the color image to grayscale
 				GrayF32 noise = ConvertBufferedImage.convertFrom(image,
 						(GrayF32) null);
 				GrayF32 gray = noise.createSameShape();
 
+				// remove noise the gray image
 				denoiser.process(noise, gray);
 
+				//Process the denoised image in point tracker
 				tracker.process(gray);
-
-				// remove noise from the image
 
 				List<PointTrack> tracks = tracker.getActiveTracks(null);
 
@@ -177,6 +183,9 @@ public class CompVisionAlgo extends Thread {
 
 					HashMap<Long, PointData> newPointLife = new HashMap<Long, PointData>();
 
+					// If there are no pointgroups yet, create the two default groups
+					// pointgroup[0] is the background group
+					// pointrgoup[1] is the moving points group
 					if (pointGroups.size() == 0) {
 						PointGroup defaultGroup = new PointGroup();
 						pointGroups.add(defaultGroup);
@@ -209,7 +218,6 @@ public class CompVisionAlgo extends Thread {
 					pointLife = newPointLife;
 				}
 
-				// Draw the tracks
 				Graphics2D g2 = image.createGraphics();
 
 				for (PointGroup pg : pointGroups) {
