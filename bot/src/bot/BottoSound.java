@@ -99,7 +99,7 @@ public class BottoSound extends Thread {
 			sound = new File("searching.aiff");
 			break;
 		case 3:
-			sound = new File("senntry_mode_activated.aiff");
+			sound = new File("sentry_mode_activated.aiff");
 			break;
 		}
 		shouldPlay = true;

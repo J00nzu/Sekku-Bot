@@ -13,6 +13,7 @@ import java.util.Random;
 
 
 
+
 import boofcv.abst.denoise.FactoryImageDenoise;
 import boofcv.abst.denoise.WaveletDenoiseFilter;
 import boofcv.abst.feature.detect.interest.ConfigGeneralDetector;
@@ -24,6 +25,12 @@ import boofcv.gui.feature.VisualizeFeatures;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayF32;
 
+/**
+ * Provides access to the computer vision algorithm. <br>
+ * Tracks points and their movement to try and track moving objects in the video feed.
+ * @author Joni
+ *
+ */
 public class CompVisionAlgo extends Thread {
 
 	private CompCameraProvider cam;
@@ -38,22 +45,40 @@ public class CompVisionAlgo extends Thread {
 	
 	private Object frameMonitor = new Object();
 
+	/**
+	 * Constructs a vision algorithm with the desired camera and maximum features
+	 * @param camera CompCameraProvider to use with the algorithm
+	 * @param maxFeatures Maximum amount of features to track. Integers above 500 are quite lag-inducing.
+	 */
 	public CompVisionAlgo(CompCameraProvider camera, int maxFeatures) {
 		this.cam = camera;
 		this.maxFeatures = maxFeatures;
 	}
 	
-
+	/**
+	 * Gets the current turn suggestion vector from the algorithm.<br>
+	 * Also starts the algorithm if it is not running.
+	 * @return A float from -1 to 1 indicating the direction of turn.
+	 */
 	public float getTurnVector() {
 		aliveCheck();
 		
 		return turnVector;
 	}
 	
+	/**
+	 * Is the algorithm following a target currently?
+	 * @return True if the algorithm is following a target. False otherwise
+	 */
 	public boolean isFollowing(){
 		return following;
 	}
 	
+	/**
+	 * Gets the compuvision 2000 visualization image.<br>
+	 * Also starts the thread if not already running, and waits till a compuvision 2000 visualization image is ready.
+	 * @return A BufferedImage containing debug data.
+	 */
 	public BufferedImage getVisualizedImage(){
 		aliveCheck();
 		
@@ -68,6 +93,11 @@ public class CompVisionAlgo extends Thread {
 		return visualized;
 	}
 	
+	/**
+	 * Waits for the next compuvision 2000 visualization image.<br>
+	 * Also starts the thread if not already running.
+	 * @return A BufferedImage containing debug data.
+	 */
 	public BufferedImage waitNextVisualizedImage(){
 		aliveCheck();
 		
@@ -80,6 +110,12 @@ public class CompVisionAlgo extends Thread {
 		return visualized;
 	}
 
+	/**
+	 * A horrible monolith method containing the "meat" of the algorithm.<br>
+	 * Sorry for anyone who tries to read and/or understand the logic.<br><br>
+	 * Sincerely,<br><br>
+	 * - The author
+	 */
 	public void run() {
 		
 		ConfigGeneralDetector configDetector = new ConfigGeneralDetector(
@@ -366,11 +402,16 @@ public class CompVisionAlgo extends Thread {
 		}
 	}
 	
+	/**
+	 * Signals the run loop to safely stop executing the thread.
+	 */
 	public void safeStop(){
 		shouldStop = true;
 	}
 	
-	
+	/**
+	 * Checks if the thread is alive or not. If not, start it.
+	 */
 	private void aliveCheck(){
 		if(!this.isAlive() && !shouldStop && !autoStarted){
 			try{
@@ -383,6 +424,14 @@ public class CompVisionAlgo extends Thread {
 		}
 	}
 
+	/**
+	 * Clamps an Integer value between two other Integers.
+	 * @param value The value to clamp
+	 * @param min The minimum value
+	 * @param max The maximum value
+	 * @return a new Integer clamped between the min and max.
+	 */
+	@SuppressWarnings("unused")
 	private static int clamp(int value, int min, int max) {
 		if (value < min) {
 			value = min;
@@ -392,6 +441,13 @@ public class CompVisionAlgo extends Thread {
 		return value;
 	}
 
+	/**
+	 * Clamps a Double value between two other Doubles.
+	 * @param value The value to clamp
+	 * @param min The minimum value
+	 * @param max The maximum value
+	 * @return a new Double clamped between the min and max.
+	 */
 	private static double clamp(double value, double min, double max) {
 		if (value < min) {
 			value = min;
@@ -401,6 +457,14 @@ public class CompVisionAlgo extends Thread {
 		return value;
 	}
 
+	/**
+	 * Measures the distance between two points
+	 * @param x1 x value of the first point
+	 * @param y1 y value of the first point
+	 * @param x2 x value of the second point
+	 * @param y2 y value of the second point
+	 * @return A double value indicating the distance between the two points
+	 */
 	private static double distance(double x1, double y1, double x2, double y2) {
 		double dist;
 		double dx = x1 - x2;
@@ -410,6 +474,13 @@ public class CompVisionAlgo extends Thread {
 		return dist;
 	}
 
+	/**
+	 * Interpolate between two values
+	 * @param curr The current value
+	 * @param target The target value
+	 * @param maxDelta The maximum change in value
+	 * @return A new value a little closer to the target
+	 */
 	private static double slerp(double curr, double target, double maxDelta) {
 		double val = curr;
 		double err = curr - target;
@@ -428,6 +499,11 @@ public class CompVisionAlgo extends Thread {
 		return val;
 	}
 
+	/**
+	 * Creates a deep copy of a BufferedImage
+	 * @param image The Image to clone
+	 * @return A new Image containing the same data as the old one
+	 */
 	private static BufferedImage imageDeepCopy(BufferedImage image) {
 		ColorModel colorModel = image.getColorModel();
 		boolean isAlphaPremultiplied = colorModel.isAlphaPremultiplied();
@@ -435,7 +511,11 @@ public class CompVisionAlgo extends Thread {
 		return new BufferedImage(colorModel, raster, isAlphaPremultiplied, null);
 	}
 	
-	
+	/**
+	 * A class containing data about feature points
+	 * @author Joni
+	 *
+	 */
 	private static class PointData {
 		public long featureID;
 		public long lifeTime;
@@ -448,11 +528,20 @@ public class CompVisionAlgo extends Thread {
 
 		public long wobblyness;
 
+		/**
+		 * Is this featurepoint wobbly or not?
+		 * @return a boolean indicating the wobblyness of this point
+		 */
 		public boolean isWobbly() {
 			return wobblyness > 0;
 		}
 	}
 
+	/**
+	 * A class containing data about groups of feature points
+	 * @author Joni
+	 *
+	 */
 	private static class PointGroup {
 		private static Random r = new Random();
 		private static long lastGroupID = 0;
@@ -466,11 +555,15 @@ public class CompVisionAlgo extends Thread {
 
 		ArrayList<PointData> members = new ArrayList<PointData>();
 
+		
 		public PointGroup() {
 			GroupID = _GetNextGroupID();
 			color = new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
 		}
 
+		/**
+		 * @return a Long with the next ID
+		 */
 		static private long _GetNextGroupID() {
 			return lastGroupID++;
 		}
