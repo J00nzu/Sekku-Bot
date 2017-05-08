@@ -10,16 +10,19 @@ import javax.swing.JOptionPane;
 import boofcv.gui.image.ImagePanel;
 import boofcv.gui.image.ShowImages;
 
+// initializes all threads run in desktop side and sets program in motion
+// the brick side server-like program must be started before this desktop side program will work
 public class CompClientMain {
 
 	public static void main(String[] args) {
-		String eiKissaa = CompCameraProvider.getDefaultWebcam();
-		CompCameraProvider prov = new CompCameraProvider(eiKissaa, 640,480);
-		CompClientBlu blu = new CompClientBlu();
-		CompVisionAlgo algo = new CompVisionAlgo(prov, 200);
-		CompClientUI ui = new CompClientUI(blu, algo, prov);
-		ui.start();
+		String eiKissaa = CompCameraProvider.getDefaultWebcam(); // gets webcam device name
+		CompCameraProvider prov = new CompCameraProvider(eiKissaa, 640,480); // initializes webcam handler with above name
+		CompClientBlu blu = new CompClientBlu(); // initializes new bluetooth thread
+		CompVisionAlgo algo = new CompVisionAlgo(prov, 200); // initializes new camera algorithm thread
+		CompClientUI ui = new CompClientUI(blu, algo, prov); // initializes new UI thread with all of the above
+		ui.start(); // starts UI thread
 		
+		// TEST CODE BELOW, DOES NOT MATTER!!
 		/*
 		List<String> webcams = CompCameraProvider.getAvailableWebcams();
 		String selected = "";
