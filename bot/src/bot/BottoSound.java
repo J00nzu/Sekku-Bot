@@ -116,7 +116,7 @@ public class BottoSound extends Thread {
 			sound = new File("searching.aiff");
 			break;
 		case 3:
-			sound = new File("sentry_mode_activated.aiff");
+			sound = new File("senntry_mode_activated.aiff");
 			break;
 		}
 		shouldPlay = true;
@@ -164,6 +164,7 @@ public class BottoSound extends Thread {
 		this.incCommand = iCommand;
 	}
 	//example of a better method
+	// randomizes one filename from list and sets it to to sound
 	/**
 	 * Sets a sound file to the sound variable depending on the name list given to the function
 	 */
