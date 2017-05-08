@@ -17,33 +17,35 @@ public class CompClientBlu extends Thread {
 	// 0=noSound, 1=error, 2=autoOn, 3=targetFound, 4=targetLost
 	
 
-	public void run() {;
-		try {
-			// estabilishes connection and data stream
-			socket = new Socket(HOST,PORT);
-			dos = new DataOutputStream(socket.getOutputStream());
-			// sends known and received data at rate of 10/second
-			while (true){
-				dos.writeFloat(turnFloat);
-				dos.writeInt(soundInt);
-				dos.flush(); // actually sends the data packet
-				// System.out.println("Sent: "+turnFloat+" + "+soundInt);
-				if (soundInt != 0){
-					soundInt = 0;
+	public void run() {
+		while (dos == null){
+			try {
+				// estabilishes connection and data stream
+				socket = new Socket(HOST,PORT);
+				dos = new DataOutputStream(socket.getOutputStream());
+				// sends known and received data at rate of 10/second
+				while (true){
+					dos.writeFloat(turnFloat);
+					dos.writeInt(soundInt);
+					dos.flush(); // actually sends the data packet
+					// System.out.println("Sent: "+turnFloat+" + "+soundInt);
+					if (soundInt != 0){
+						soundInt = 0;
+					}
+					Thread.sleep(100);
+					if (turnFloat == 9001){ // end this thread by giving it 9001 via method
+						break;
+					}
 				}
-				Thread.sleep(100);
-				if (turnFloat == 9001){ // end this thread by giving it 9001 via method
-					break;
-				}
+				dos.close();
+				socket.close();
+			} catch (UnknownHostException e) {
+				System.out.println("Connection not found, retrying...");
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-			dos.close();
-			socket.close();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 	}
 	
