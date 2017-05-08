@@ -1,3 +1,8 @@
+/**
+ * Allows the robot to play sound files when certain events occur
+ * @author Leevi Junttila
+ * @author Sakari Helokunnas
+ */
 package bot;
 
 import java.io.File;
@@ -29,6 +34,9 @@ public class BottoSound extends Thread {
 	}
 	//Elda varibles END
 
+	/**
+	 * Sets a sound file used for finding a target to the sound variable
+	 */
 	public void targetFoundSound() {
 		// max = funktion käytössä olevien äänifilujen määrä
 		int max = 6;
@@ -58,6 +66,9 @@ public class BottoSound extends Thread {
 	}
 
 	// löytö
+	/**
+	 * Sets a sound file used when losing target to the sound variable
+	 */
 	public void targetLostSound() {
 		int max = 2;
 		int choice = 1 + (int) (Math.random() * ((max - 1) + 1));
@@ -73,6 +84,9 @@ public class BottoSound extends Thread {
 	}
 
 	// error
+	/**
+	 * Sets a sound file used when an error occurs to the sound variable
+	 */
 	public void errorSound() {
 		int max = 2;
 		int choice = 1 + (int) (Math.random() * ((max - 1) + 1));
@@ -88,6 +102,9 @@ public class BottoSound extends Thread {
 	}
 
 	// automode
+	/**
+	 * Sets a sound file used when activating auto-mode to the sound variable
+	 */
 	public void autoModeActivationSound() {
 		int max = 3;
 		int choice = 1 + (int) (Math.random() * ((max - 1) + 1));
@@ -104,7 +121,11 @@ public class BottoSound extends Thread {
 		}
 		shouldPlay = true;
 	}
-
+	/**
+	 * checks endBool and incCommand todetermine what to do
+	 * plays set sound file when incCommand in not 0
+	 * ends if endBool is true
+	 */
 	public void run() {
 		while (!endBool) {
 			if (incCommand != 0){
@@ -136,17 +157,24 @@ public class BottoSound extends Thread {
 			Delay.msDelay(20);
 		}
 	}
-	
+	/**
+	 * Changes incoming bluetooth command
+	 */
 	public void changeIncCommand(int iCommand){
 		this.incCommand = iCommand;
 	}
-	
+	//example of a better method
+	/**
+	 * Sets a sound file to the sound variable depending on the name list given to the function
+	 */
 	public void newSound(String[] fileNameList){
 		int rand = trueR.nextInt(fileNameList.length);
 		sound = new File(fileNameList[rand]);
 		shouldPlay = true;
 	}
-	
+	/**
+	 * ends thread
+	 */
 	public void endThread(){
 		endBool = true;
 	}
