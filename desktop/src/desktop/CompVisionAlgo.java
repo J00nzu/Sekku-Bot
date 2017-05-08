@@ -32,6 +32,7 @@ public class CompVisionAlgo extends Thread {
 	private BufferedImage visualized;
 	private boolean shouldStop = false;
 	private boolean autoStarted = false;
+	private boolean following = false;;
 	
 	private static float turn_treshold = 0.2f;
 	
@@ -49,7 +50,11 @@ public class CompVisionAlgo extends Thread {
 		return turnVector;
 	}
 	
-	public BufferedImage GetVisualizedImage(){
+	public boolean isFollowing(){
+		return following;
+	}
+	
+	public BufferedImage getVisualizedImage(){
 		aliveCheck();
 		
 		if(visualized==null){
@@ -63,7 +68,7 @@ public class CompVisionAlgo extends Thread {
 		return visualized;
 	}
 	
-	public BufferedImage WaitNextVisualizedImage(){
+	public BufferedImage waitNextVisualizedImage(){
 		aliveCheck();
 		
 		try{
@@ -332,9 +337,13 @@ public class CompVisionAlgo extends Thread {
 				float turnMag = Math.abs(turnVector);
 				if(turnMag < turn_treshold){
 					turnMag = 0f;
+					
+					following = false;
 				}else{
 					turnMag *= 1+ (turn_treshold*2);
 					turnMag -= turn_treshold;
+					
+					following = true;
 					
 					if(turnMag > 1){
 						turnMag = 1;

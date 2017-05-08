@@ -92,7 +92,7 @@ public class CompClientUI extends Thread implements ActionListener {
 				bluetooth.changeTurnFloat(algorithm.getTurnVector());
 			}
 			if (CompuVision) {
-				imgPanel.setBufferedImageSafe(algorithm.GetVisualizedImage());
+				imgPanel.setBufferedImageSafe(algorithm.getVisualizedImage());
 			}else{
 			imgPanel.setBufferedImageSafe(camera.getFrame());
 			}
