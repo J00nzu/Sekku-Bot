@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Random;
 
 
-
-
-
 import boofcv.abst.denoise.FactoryImageDenoise;
 import boofcv.abst.denoise.WaveletDenoiseFilter;
 import boofcv.abst.feature.detect.interest.ConfigGeneralDetector;

@@ -13,7 +13,7 @@ import com.github.sarxos.webcam.WebcamListener;
 import boofcv.io.webcamcapture.UtilWebcamCapture;
 
 /**
- * Provides access to the system's webcams
+ * Provides thread-safe access to the system's webcams
  * 
  * @author Joni
  *
@@ -114,7 +114,7 @@ public class CompCameraProvider {
 	 * If another thread is already polling for a frame, this will wait until the frame is available.
 	 * @return A BufferedImage of the next frame
 	 */
-	public synchronized BufferedImage getFrame() {
+	public BufferedImage getFrame() {
 		if (webcam != null) {
 			if(frameLock.tryAcquire()){
 				lastFrame = webcam.getImage();
