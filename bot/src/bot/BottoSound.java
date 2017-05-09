@@ -34,7 +34,7 @@ public class BottoSound extends Thread {
 	private final String[] errorArr = new String[]
 			{"malfunctioning.aiff","unknown_error.aiff"};
 	private final String[] autoActArr = new String[]
-			{"activated.aiff","searching.aiff","senntry_mode_activated.aiff"};
+			{"activated.aiff","searching.aiff","sentry_mode_activated.aiff"};
 	
 	/*
 	 * Constructor.
@@ -128,7 +128,7 @@ public class BottoSound extends Thread {
 			sound = new File("searching.aiff");
 			break;
 		case 3:
-			sound = new File("senntry_mode_activated.aiff");
+			sound = new File("sentry_mode_activated.aiff");
 			break;
 		}
 		shouldPlay = true;
