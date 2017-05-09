@@ -6,13 +6,29 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * 
+ * @author haell
+ * ActionListener is there to method to make the buttons work when pressed
+ * We decide the size of the window
+ */
 
 public class CompClientUI extends Thread implements ActionListener {
 	private static final int SIZEX = 1080;
 	private static final int SIZEY = 720;
 	
+	/**
+	 * If false (default) manual control is used
+	 */
 	boolean autoBool = false;
+	/**
+	 * If false (default) shows normal camera feed
+	 */
 	boolean CompuVision = false;
+	
+	/*
+	 * Create the button and picture objects
+	 */
 	
 	JFrame uiFrame;
 	JLabel explanation;
@@ -27,11 +43,27 @@ public class CompClientUI extends Thread implements ActionListener {
 	CompCameraProvider camera;
 	ImagePanel imgPanel;
 	
+	 /**
+	  * 
+	  * @param blub
+	  * 		Bluetooth 
+	  * @param algo
+	  * 		Algorithhm
+	  * @param camera
+	  * 		Camera
+	  */
+	
 	public CompClientUI(CompClientBlu blub, CompVisionAlgo algo, CompCameraProvider camera){
 		this.bluetooth = blub;
 		this.algorithm = algo;
 		this.camera = camera;
 	}
+	
+	/**
+	 * Start the program
+	 * Open Bluetooth, camera and Algorithm
+	 * GridBagConstraints to decide how objects are laid out in the frame
+	 */
 	
 	public void run(){
 		bluetooth.start();
@@ -42,6 +74,9 @@ public class CompClientUI extends Thread implements ActionListener {
 		uiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		uiFrame.setLayout(new GridBagLayout());
 		
+		/**
+		 * Buttons connect to Autolistener
+		 */
 		
 		explanation = new JLabel("Text here");
 		autoInfoBox = new JLabel("Auto is OFF");
@@ -59,33 +94,41 @@ public class CompClientUI extends Thread implements ActionListener {
 		
 		imgPanel.setPreferredSize(camera.getWebcam().getViewSize());
 		
-		//add label
-		constra = changeConstraints(constra, 0,1,0);
+		/**
+		 * Decide the position of each button
+		 */
+		
+		constra = changeConstraints(constra, 1,0);
 		uiFrame.add(explanation, constra);
 		
-		constra = changeConstraints(constra, 0.5,0,1);
+		constra = changeConstraints(constra, 0,1);
 		uiFrame.add(buttonLeft, constra);
 		
-		constra = changeConstraints(constra, 0.5,1,1);
+		constra = changeConstraints(constra, 1,1);
 		uiFrame.add(buttonStop, constra);
 		
-		constra = changeConstraints(constra, 0.5,2,1);
+		constra = changeConstraints(constra, 2,1);
 		uiFrame.add(buttonRight, constra);
 		
-		constra = changeConstraints(constra, 0,1,2);
+		constra = changeConstraints(constra, 1,2);
 		uiFrame.add(buttonAuto, constra);
 		
-		constra = changeConstraints(constra, 0,1,3);
+		constra = changeConstraints(constra, 1,3);
 		uiFrame.add(buttonChange, constra);
 		
-		constra = changeConstraints(constra, 0,1,4);
+		constra = changeConstraints(constra, 1,4);
 		uiFrame.add(autoInfoBox, constra);
 		
-		constra = changeConstraints(constra, 0,1,5);
+		constra = changeConstraints(constra, 1,5);
 		uiFrame.add(imgPanel, constra);
 		
 		uiFrame.setSize(SIZEX, SIZEY);
 		uiFrame.setVisible(true);
+		
+		/**
+		 * To check if we use Bluetooth or automatic control
+		 * To check if we show normal camera view or computer vision
+		 */
 		
 		while(true){
 			if (autoBool){
@@ -98,16 +141,27 @@ public class CompClientUI extends Thread implements ActionListener {
 			}
 		}
 	}
-	
-	private GridBagConstraints changeConstraints(GridBagConstraints con, double weight, int x, int y){
-		con.fill = GridBagConstraints.RELATIVE;
-		con.weightx = weight;
+	/**
+	 * 		con.fill makes sure the area between the left and right buttons is filled with a button
+	 * @param con
+	 * 		The position on y-axis
+	 * @param x
+	 * 		The position on x-axis
+	 * @param y
+	 * 		Returns the con
+	 * @return
+	 */
+	private GridBagConstraints changeConstraints(GridBagConstraints con, int x, int y){
+		con.fill = GridBagConstraints.HORIZONTAL;
 		con.gridx = x;
 		con.gridy = y;
 		return con;
 		
 	}
-
+	/**
+	 * This is called when a button is pressed
+	 * @param event
+	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		System.out.println("A button was pressed...");
