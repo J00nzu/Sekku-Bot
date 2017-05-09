@@ -4,7 +4,16 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-//transfers received data over bluetooth to set HOST
+
+/**
+ * 
+ * Transfers received data over bluetooth to set HOST
+ * Acts as a bridge between desktop and brick.
+ * During runtime receives updates with changeTurnFloat() and changeSoundInt().
+ * 
+ * @author Elda (Sakari)
+ *
+ */
 public class CompClientBlu extends Thread {
 	private static final String HOST = "10.0.1.1"; // IP address of the brick
 	private static final int PORT = 55555; // pre-determined port to use for this transaction
@@ -16,7 +25,12 @@ public class CompClientBlu extends Thread {
 	private int soundInt = 0;  // received data regarding sound file
 	// 0=noSound, 1=error, 2=autoOn, 3=targetFound, 4=targetLost
 	
-
+	/**
+	 * Main method of the thread.
+	 * First, tries to (indefinitely) connect to a PORT on HOST.
+	 * Second, begins to send turnFloat and soundInt to said HOST.
+	 * This continues....
+	 */
 	public void run() {
 		while (dos == null){
 			try {
@@ -41,6 +55,7 @@ public class CompClientBlu extends Thread {
 				}
 				dos.close();
 				socket.close();
+				break;
 			} catch (Exception ex) {
 				System.out.println("Connection failed, retrying...");
 				try{
@@ -50,13 +65,19 @@ public class CompClientBlu extends Thread {
 		}
 	}
 	
-	// method to change what turnFloat value is transmitted
-	// (set this to 9001 to end the thread)
+	/**
+	 * Sets turnFloat (a transmitted value) to given float.
+	 * @param flo New turnFloat. (Transmitted value). Set to 9001 to end the thread.
+	 */
 	public void changeTurnFloat(float flo){
 		this.turnFloat = flo;
 	}
 	
 	// method to change what soundInt value is transmitted
+	/**
+	 * Sets soundInt (a transmitted value) to given int.
+	 * @param ind New soundInt. (Transmitted value)
+	 */
 	public void changeSoundInt(int ind){
 		this.soundInt = ind;
 	}

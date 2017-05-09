@@ -10,10 +10,19 @@ import javax.swing.JOptionPane;
 import boofcv.gui.image.ImagePanel;
 import boofcv.gui.image.ShowImages;
 
-// initializes all threads run in desktop side and sets program in motion
-// the brick side server-like program must be started before this desktop side program will work
+/** 
+ * Initializes all threads run in desktop side and sets the program in motion
+ * The brick side server-like program must be started before this desktop side program will work
+ * @author Elda (Sakari)
+ *
+ */
 public class CompClientMain {
-
+	
+	/**
+	 * The beginning of the program.
+	 * Runs intializations and then dies.
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		// webcam selection (just in case computer has multiple webcams connected)
 		List<String> webcams = CompCameraProvider.getAvailableWebcams();

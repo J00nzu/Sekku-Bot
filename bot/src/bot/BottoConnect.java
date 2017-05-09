@@ -6,7 +6,13 @@ import java.net.Socket;
 
 import lejos.hardware.lcd.LCD;
 
-// receives data and transmits the data forward to motor controller and sound controller
+/**
+ * A server-like thread. Waits for a connection to be made to PORT.
+ * Receives data and transmits the data forward to motor controller and sound controller
+ * Acts as a bridge from desktop to the brick.
+ * @author Elda
+ *
+ */
 public class BottoConnect extends Thread { //brick part
 	private static final int PORT = 55555; // pre-determined listening port
 	private static final int TIMEOUT = 2000; // time (in milliseconds) to terminate thread after not receiving an input
@@ -19,12 +25,20 @@ public class BottoConnect extends Thread { //brick part
 	// saved threads
 	BottoMotor motorcon;
 	BottoSound soundcon;
-	
+	/**
+	 * Receives initialized devices and stores them.
+	 * @param motor Initialized motor controller Thread
+	 * @param sound Initialized sound controlled Thread
+	 */
 	public BottoConnect(BottoMotor motor, BottoSound sound){
 		this.motorcon = motor;
 		this.soundcon = sound;
 	}
-	
+	/**
+	 * Start of this thread.
+	 * Starts other threads, then waits for connection to be made.
+	 * After getting connection, reads input stream and distributes data to controller threads.
+	 */
 	public void run(){
 		// start connected threads
 		motorcon.start();

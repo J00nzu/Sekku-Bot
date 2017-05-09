@@ -5,10 +5,20 @@ import lejos.robotics.RegulatedMotor;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3TouchSensor;
 
-// initializes all threads and all devices, and sets program in motion
-// this brick side server-like programs must be started before the desktop program will work
+/**
+ *  Initializes all threads and all devices, and sets the brick program in motion
+ *  This brick side server-like programs must be started before the desktop program will work
+ * @author Elda (Sakari)
+ *
+ */
 public class BottoMain {
 	
+	/**
+	 * Start of this program.
+	 * Finds devices and initializes threads.
+	 * Passes information forward, then dies.
+	 * @param args
+	 */
     public static void main(String[] args) {
     	// device initializations
     	RegulatedMotor motor = new EV3LargeRegulatedMotor(MotorPort.C);
