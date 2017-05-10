@@ -8,35 +8,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
-
 /**
  * Starts all other desktop threads
  * Initializes and handles User Interface
  * Transfers information to bluetooth thread
- * @author Elda (Sakari)
+ * @author Haell
  *
  */
 public class CompClientUI extends Thread implements ActionListener {
 	private static final int SIZEX = 1080;
 	private static final int SIZEY = 720;
 	
-	boolean autoBool = false; // toggle between automatic algorithm and manual control
-	boolean CompuVision = false; // toggle between computer vision and actual camera
+	boolean autoBool = false;		// toggle between automatic algorithm and manual control
+	boolean CompuVision = false;	// toggle between computer vision and actual camera
 	boolean algoWasFollowing = false; // remembers what state the algorithm.isFollowing() had.
 	
-	JFrame uiFrame;			// the base UI, in which all components (below) are put
-	ImagePanel imgPanel;	// image to store the information from camera
-	JLabel explanation;		// textbox for basic explanation
-	JLabel autoInfoBox;		// textbox to tell wether automatic control is on or off
-	JButton buttonRight;	// button for right movement
-	JButton buttonLeft;		// button for left movement
-	JButton buttonStop;		// button for ending movement
-	JButton buttonAuto;		// button for toggling automatic control on and off
-	JButton buttonChange;	// button for toggling computer vision on and off
-	
+	JFrame uiFrame;				// the base UI, in which all components (below) are put
+	JLabel explanation;			// textbox for basic explanation
+	JLabel autoInfoBox;			// textbox to tell wether automatic control is on or off
+	JButton buttonRight;		// button for right movement
+	JButton buttonLeft;			// button for left movement
+	JButton buttonStop;			// button for ending movement
+	JButton buttonAuto;			// button for toggling automatic control on and off
+	JButton buttonChange;		// button for toggling computer vision on and off
 	CompClientBlu bluetooth;	// stored bluetooth thread (sets movement here)
 	CompVisionAlgo algorithm;	// stored camera algorithm (gets automatic movement from here)
 	CompCameraProvider camera;	// stored camera handler (gets videofeed here from here)
+	ImagePanel imgPanel;		// image to store the information from camera
 	
 	/**
 	 * Takes other threads and stores them.
@@ -44,6 +42,7 @@ public class CompClientUI extends Thread implements ActionListener {
 	 * @param algo Initialized Desktop camera follow algorithm thread.
 	 * @param camera Initialized Camera Handler class.
 	 */
+
 	public CompClientUI(CompClientBlu blub, CompVisionAlgo algo, CompCameraProvider camera){
 		this.bluetooth = blub;
 		this.algorithm = algo;
@@ -56,6 +55,7 @@ public class CompClientUI extends Thread implements ActionListener {
 	 * Continues to read video feed
 	 * Continues to transmit data to bluetooth
 	 */
+
 	public void run(){
 		// starting threads
 		bluetooth.start();
@@ -66,6 +66,13 @@ public class CompClientUI extends Thread implements ActionListener {
 		// initializing ui base
 		uiFrame = new JFrame("Controller UI");
 		GridBagConstraints constra = new GridBagConstraints();
+		uiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		uiFrame.setLayout(new GridBagLayout());
+		
+		/**
+		 * Buttons connect to Autolistener
+		 */
+
 		uiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // this is used to close all other threads also
 		uiFrame.setLayout(new GridBagLayout()); // using GridBagLayout
 		
@@ -84,35 +91,40 @@ public class CompClientUI extends Thread implements ActionListener {
 		buttonChange = new JButton("CompuVision 2000TM");
 		buttonChange.addActionListener(this);
 		imgPanel.setPreferredSize(camera.getWebcam().getViewSize()); // sets image size to camera image
+		imgPanel.setPreferredSize(camera.getWebcam().getViewSize());
 		
 		//add all UI parts (labels, buttons and an image)
-		constra = changeConstraints(constra, 0,1,0);
+		constra = changeConstraints(constra, 1,0);
 		uiFrame.add(explanation, constra);
 		
-		constra = changeConstraints(constra, 1,1,1);
-		uiFrame.add(imgPanel, constra);
-		
-		constra = changeConstraints(constra, 0.5,0,2);
+		constra = changeConstraints(constra, 0,1);
 		uiFrame.add(buttonLeft, constra);
 		
-		constra = changeConstraints(constra, 0.5,1,2);
+		constra = changeConstraints(constra, 1,1);
 		uiFrame.add(buttonStop, constra);
 		
-		constra = changeConstraints(constra, 0.5,2,2);
+		constra = changeConstraints(constra, 2,1);
 		uiFrame.add(buttonRight, constra);
 		
-		constra = changeConstraints(constra, 0,0,3);
-		uiFrame.add(autoInfoBox, constra);
-		
-		constra = changeConstraints(constra, 0,1,3);
+		constra = changeConstraints(constra, 1,2);
 		uiFrame.add(buttonAuto, constra);
 		
-		constra = changeConstraints(constra, 0,2,3);
+		constra = changeConstraints(constra, 1,3);
 		uiFrame.add(buttonChange, constra);
-
+		
+		constra = changeConstraints(constra, 1,4);
+		uiFrame.add(autoInfoBox, constra);
+		
+		constra = changeConstraints(constra, 1,5);
+		uiFrame.add(imgPanel, constra);
 		
 		uiFrame.setSize(SIZEX, SIZEY);
 		uiFrame.setVisible(true);
+		
+		/**
+		 * To check if we use Bluetooth or automatic control
+		 * To check if we show normal camera view or computer vision
+		 */
 		
 		while(true){
 			if (autoBool){ // if automatic control is on
@@ -150,7 +162,7 @@ public class CompClientUI extends Thread implements ActionListener {
 			System.out.println(sb.toString());
 		}
 	}
-	
+
 	/**
 	 * Method for quickly setting GridBagConstraints for UI elements
 	 * @param con Storage spot.
@@ -159,14 +171,16 @@ public class CompClientUI extends Thread implements ActionListener {
 	 * @param y Row number.
 	 * @return
 	 */
-	private GridBagConstraints changeConstraints(GridBagConstraints con, double weight, int x, int y){
-		con.fill = GridBagConstraints.RELATIVE;
-		con.weightx = weight;
+	
+	private GridBagConstraints changeConstraints(GridBagConstraints con, int x, int y){
+		con.fill = GridBagConstraints.HORIZONTAL;
 		con.gridx = x;
 		con.gridy = y;
 		return con;
-		
 	}
+	/**
+	 * This is called when a button is pressed
+	 * @param event
 	
 	/**
 	 * Action listener for this thread.
