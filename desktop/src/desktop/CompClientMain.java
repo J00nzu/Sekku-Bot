@@ -10,16 +10,44 @@ import javax.swing.JOptionPane;
 import boofcv.gui.image.ImagePanel;
 import boofcv.gui.image.ShowImages;
 
+/** 
+ * Initializes all threads run in desktop side and sets the program in motion
+ * The brick side server-like program must be started before this desktop side program will work
+ * @author Elda (Sakari)
+ *
+ */
 public class CompClientMain {
-
+	
+	/**
+	 * The beginning of the program.
+	 * Runs intializations and then dies.
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		String eiKissaa = CompCameraProvider.getDefaultWebcam();
-		CompCameraProvider prov = new CompCameraProvider(eiKissaa, 640,480);
-		CompClientBlu blu = new CompClientBlu();
-		CompVisionAlgo algo = new CompVisionAlgo(prov, 200);
-		CompClientUI ui = new CompClientUI(blu, algo, prov);
-		ui.start();
+		// webcam selection (just in case computer has multiple webcams connected)
+		List<String> webcams = CompCameraProvider.getAvailableWebcams();
+		String selected = "";
 		
+		if(webcams.size()==0){
+			JOptionPane.showMessageDialog(null, "No available webcams found", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		else{
+			int selection = JOptionPane.showOptionDialog(null, "Choose a webcam", "Choose", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, webcams.toArray(), webcams.get(0));
+			if(selection != -1){
+				selected = webcams.get(selection);
+			}
+		}
+		if(selected.isEmpty()){
+			return;
+		}
+		//  webcam selection end
+		CompCameraProvider prov = new CompCameraProvider(selected, 640,480); // initializes webcam handler with chosen name
+		CompClientBlu blu = new CompClientBlu(); // initializes new bluetooth thread
+		CompVisionAlgo algo = new CompVisionAlgo(prov, 400); // initializes new camera algorithm thread
+		CompClientUI ui = new CompClientUI(blu, algo, prov); // initializes new UI thread with all of the above
+		ui.start(); // starts UI thread
+		
+		// TEST CODE BELOW, DOES NOT MATTER!!
 		/*
 		List<String> webcams = CompCameraProvider.getAvailableWebcams();
 		String selected = "";
